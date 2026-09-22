@@ -1,0 +1,10 @@
+image: node:24
+stages: [verify]
+verify:
+  stage: verify
+  script:
+    - npm ci
+    - npm run check
+    - npm run format:check
+    - npm run demo
+    - npm pack --dry-run

@@ -1,0 +1,49 @@
+{
+  "name": "@elie-laloum/murmur",
+  "version": "0.1.0",
+  "description": "Isolated coding agents and composable, typed workflows.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Elie Laloum",
+  "engines": {
+    "node": ">=24"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "containers",
+    "README.md",
+    "README.fr.md",
+    "LICENSE",
+    "scripts/build-image.mjs"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "node --test test/*.test.ts",
+    "test:container": "node --test test/integration/*.test.ts",
+    "check": "npm run typecheck && npm test && npm run build",
+    "demo": "node examples/demo.ts",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepack": "npm run build",
+    "image:build": "node scripts/build-image.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.elielaloum.com/elielaloum/murmur.git"
+  },
+  "bugs": {
+    "url": "https://github.com/elie-laloum/murmur/issues"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^6.0.3",
+    "prettier": "^3.5.3"
+  }
+}
