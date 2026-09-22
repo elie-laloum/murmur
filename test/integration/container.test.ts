@@ -72,6 +72,17 @@ test(
       assert.equal(result.code, 0);
       assert.equal(result.stdout.trim(), "false");
       assert.match(await room.workspace.patch(), /\+container edit/);
+      const credential = await room.command({
+        program: "node",
+        args: ["-e", "console.log(process.env.MURMUR_TEST_SECRET)"],
+        env: { MURMUR_TEST_SECRET: "fixture-only" },
+      });
+      assert.equal(credential.stdout.trim(), "fixture-only");
+      const next = await room.command({
+        program: "node",
+        args: ["-e", "console.log(process.env.MURMUR_TEST_SECRET ?? 'absent')"],
+      });
+      assert.equal(next.stdout.trim(), "absent");
       await assert.rejects(
         room.command({ program: "sleep", args: ["60"], timeoutMs: 100 }),
         /timed out/,

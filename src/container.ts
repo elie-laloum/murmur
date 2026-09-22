@@ -18,6 +18,12 @@ export function containers(settings: ContainerSettings): Isolator {
   if (!settings.image || settings.image.startsWith("-"))
     throw new Error("A container image is required");
   const engine = settings.engine ?? "docker";
+  if (engine !== "docker" && engine !== "podman")
+    throw new Error("Container engine must be docker or podman");
+  const network = settings.network ?? "bridge";
+  if (network !== "bridge" && network !== "none")
+    throw new Error("Container network must be bridge or none");
+  const image = settings.image;
   const memory = settings.memoryMb ?? 2048;
   const cpus = settings.cpus ?? 2;
   const uid = settings.uid ?? (process.getuid?.() || 1000);
@@ -83,7 +89,7 @@ export function containers(settings: ContainerSettings): Isolator {
         "--user",
         `${uid}:${gid}`,
         "--network",
-        settings.network ?? "bridge",
+        network,
         "--workdir",
         "/workspace",
         "--mount",
@@ -110,7 +116,7 @@ export function containers(settings: ContainerSettings): Isolator {
         "GIT_COMMITTER_EMAIL=murmur@localhost",
         "--entrypoint",
         "sleep",
-        settings.image,
+        image,
         "infinity",
       ];
       try {
